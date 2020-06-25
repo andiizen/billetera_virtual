@@ -71,13 +71,13 @@ public class Transaccion {
         this.fecha = fecha;
     }
 
-    public int getEstadoId() {
+	public Integer getEstadoId() {
         return estadoId;
     }
 
-    public void setEstadoId(int estadoId) {
-        this.estadoId = estadoId;
-    }
+	public void setEstadoId(Integer estadoId) {
+		this.estadoId = estadoId;
+	}
 
     public BigDecimal getImporte() {
         return importe;
