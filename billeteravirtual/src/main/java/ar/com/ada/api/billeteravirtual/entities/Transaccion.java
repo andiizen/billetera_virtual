@@ -40,11 +40,9 @@ public class Transaccion {
 
     @Column(name = "a_usuario")
     private Integer aUsuarioId;
-
-    @Column(name = "de_cuenta_id")
+	@Column(name = "de_cuenta")
     private Integer deCuentaId;
-
-    @Column(name = "a_cuenta_id")
+	@Column(name = "a_cuenta")
     private Integer aCuentaId;
 
     public Integer getTransaccionId() {

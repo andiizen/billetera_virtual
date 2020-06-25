@@ -1,8 +1,8 @@
-
 package ar.com.ada.api.billeteravirtual.entities;
 
 import java.math.BigDecimal;
 import java.util.*;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,9 +13,7 @@ public class Cuenta {
 	@Column(name = "cuenta_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cuentaId;
-
     private BigDecimal saldo;
-
     private String moneda;
 
 	@ManyToOne

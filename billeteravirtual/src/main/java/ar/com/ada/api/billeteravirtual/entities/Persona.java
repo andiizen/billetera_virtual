@@ -49,6 +49,32 @@ public class Persona {
         this.nombre = nombre;
     }
 
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+        this.usuario.setPersona(this);
+    }
+
+    public Billetera getBilletera() {
+        return billetera;
+    }
+
+    public void setBilletera(Billetera billetera) {
+        this.billetera = billetera;
+        this.billetera.setPersona(this);
+    }
+
     public Integer getPaisId() {
         return paisId;
     }
@@ -71,31 +97,6 @@ public class Persona {
 
     public void setDocumento(String documento) {
         this.documento = documento;
-    }
-
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Billetera getBilletera() {
-        return billetera;
-    }
-
-    public void setBilletera(Billetera billetera) {
-        this.billetera = billetera;
-        this.billetera.setPersona(this);// relacion bidireccional
     }
 
 }
