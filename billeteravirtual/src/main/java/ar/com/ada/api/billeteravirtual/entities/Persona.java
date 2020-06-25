@@ -7,19 +7,31 @@ import javax.persistence.*;
 @Entity
 @Table(name = "persona")
 public class Persona {
-
-    @Id
+	
+	@Id
     @Column(name = "persona_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer personaId;
+
     private String nombre;
+
+	@Column(name = "pais_id")
     private Integer paisId;
+
+	@Column(name = "tipo_documento_id")
     private Integer tipoDocumentoId;
+    
     private String documento;
+
+	@Column(name = "fecha_nacimiento")
     private Date fechaNacimiento;
+
+	@OneToOne(mappedBy = "persona",cascade = CascadeType.ALL)
     private Usuario usuario;
-    @OneToOne(mappedBy = "persona", cascade = CascadeType.ALL) // mapealo en la clase billetera del atributo persona.
+
+	@OneToOne(mappedBy = "persona",cascade = CascadeType.ALL)
     private Billetera billetera;
+
 
     public Integer getPersonaId() {
         return personaId;
