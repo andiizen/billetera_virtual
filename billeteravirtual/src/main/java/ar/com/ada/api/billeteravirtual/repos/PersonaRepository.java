@@ -1,5 +1,9 @@
 package ar.com.ada.api.billeteravirtual.repos;
 
-public class PersonaRepository {
-    
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import ar.com.ada.api.billeteravirtual.entities.*;
+
+public interface PersonaRepository extends JpaRepository<Persona, Integer> {
+
 }
