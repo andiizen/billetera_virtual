@@ -1,10 +1,20 @@
 package ar.com.ada.api.billeteravirtual.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import ar.com.ada.api.billeteravirtual.entities.Billetera;
+import ar.com.ada.api.billeteravirtual.repos.BilleteraRepositoty;
 
 @Service
 public class BilleteraService {
+    @Autowired
+    BilleteraRepositoty repo;
 
+    public void grabar(Billetera billetera){
+        repo.save(billetera);
+    }
+    
     /*1.Metodo: cargar saldo.
     1.1 Recibir un importe. Se busca una billetera por ID y una cuenta por la moneda.
     1.2 hacer transaccion
