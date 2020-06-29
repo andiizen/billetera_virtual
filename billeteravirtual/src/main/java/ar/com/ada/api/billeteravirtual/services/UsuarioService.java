@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ar.com.ada.api.billeteravirtual.entities.Persona;
 import ar.com.ada.api.billeteravirtual.entities.Usuario;
 import ar.com.ada.api.billeteravirtual.repos.UsuarioRepository;
+import ar.com.ada.api.billeteravirtual.security.Crypto;
 
 @Service
 public class UsuarioService {
@@ -49,7 +50,7 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setUsername(email);
         usuario.setEmail(email);
-        usuario.setPassword(password);
+        usuario.setPassword(Crypto.encrypt(password, email));
 
         persona.setUsuario(usuario);
 
