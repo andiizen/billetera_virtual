@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import ar.com.ada.api.billeteravirtual.entities.*;
@@ -26,6 +27,17 @@ public class UsuarioService {
     }
 
     public void login(String username, String password) {
+        /**
+         * Metodo IniciarSesion recibe usuario y contraseña validar usuario y contraseña
+         */
+
+        Usuario u = buscarPorUsername(username);
+
+        if (u == null || !u.getPassword().equals(Crypto.encrypt(password, u.getUsername()))) {
+
+            throw new BadCredentialsException("Usuario o contraseña invalida");
+        }
+
     }
 
     /*
