@@ -88,6 +88,9 @@ public class BilleteraService {
         tEntrante.setDeCuentaId(cuentaSaliente.getCuentaId());
         tEntrante.setDeUsuarioId(billeteraSaliente.getPersona().getUsuario().getUsuarioId());
 
+        cuentaSaliente.agregarTransaccion(tSaliente);
+        cuentaEntrante.agregarTransaccion(tEntrante);
+
         // 2.2--* actualizar los saldos de las cuentas (a una se le suma y a la otra se
         // le resta)
         // tratar de encapsular y luego agregar la transaccion.
