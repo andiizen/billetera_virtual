@@ -6,39 +6,49 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ar.com.ada.api.billeteravirtual.entities.*;
-import ar.com.ada.api.billeteravirtual.repos.BilleteraRepository;
+import ar.com.ada.api.billeteravirtual.entities.Billetera;
+import ar.com.ada.api.billeteravirtual.entities.Cuenta;
+import ar.com.ada.api.billeteravirtual.entities.Transaccion;
+import ar.com.ada.api.billeteravirtual.entities.Usuario;
+import ar.com.ada.api.billeteravirtual.repositories.BilleteraRepository;
 
 @Service
 public class BilleteraService {
 
     @Autowired
-    BilleteraRepository repo;
+    BilleteraRepository billeteraRepository;
 
-    /*
-     * 3. Metodo: consultar saldo 3.1-- recibir el id de la billetera y la moneda en
-     * la que esta la cuenta
-     */
+    @Autowired
+    UsuarioService usuarioService;
 
     public void grabar(Billetera billetera) {
-        repo.save(billetera);
+        billeteraRepository.save(billetera);
     }
+
+    /**
+     * Metodo cargarSaldo buscar billetera por id se identifica cuenta por moneda
+     * determinar importe a cargar hacer transaccion
+     * 
+     * ver delegaciones sobre entidades
+     * 
+     */
 
     public void cargarSaldo(BigDecimal saldo, String moneda, Integer billeteraId, String conceptoOperacion,
             String detalle) {
 
-        Billetera billetera = repo.findByBilleteraId(billeteraId);
+        Billetera billetera = billeteraRepository.findByBilleteraId(billeteraId);
 
         Cuenta cuenta = billetera.getCuenta(moneda);
 
         Transaccion transaccion = new Transaccion();
+        // transaccion.setCuenta(cuenta);
         transaccion.setMoneda(moneda);
         transaccion.setFecha(new Date());
         transaccion.setConceptoOperacion(conceptoOperacion);
         transaccion.setDetalle(detalle);
         transaccion.setImporte(saldo);
         transaccion.setTipoOperacion(1);// 1 Entrada, 0 Salida
-        transaccion.setEstadoId(1);// -1 Rechazada 0 Pendiente 1 Aprobada
+        transaccion.setEstadoId(2);// -1 Rechazada 0 Pendiente 2 Aprobada
         transaccion.setDeCuentaId(cuenta.getCuentaId());
         transaccion.setDeUsuarioId(billetera.getPersona().getUsuario().getUsuarioId());
         transaccion.setaUsuarioId(billetera.getPersona().getUsuario().getUsuarioId());
@@ -46,12 +56,22 @@ public class BilleteraService {
 
         cuenta.agregarTransaccion(transaccion);
 
+        // Esto vamos a ver despues que pasa
+        BigDecimal saldoActual = cuenta.getSaldo();
+        BigDecimal saldoNuevo = saldoActual.add(saldo);
+        cuenta.setSaldo(saldoNuevo);
+
         this.grabar(billetera);
     }
 
+    /**
+     * Metodo consultarSaldo buscar billetera por id se identifica cuenta por moneda
+     * traer saldo
+     */
+
     public BigDecimal consultarSaldo(Integer billeteraId, String moneda) {
 
-        Billetera billetera = repo.findByBilleteraId(billeteraId);
+        Billetera billetera = billeteraRepository.findByBilleteraId(billeteraId);
 
         Cuenta cuenta = billetera.getCuenta(moneda);
 
@@ -61,16 +81,21 @@ public class BilleteraService {
 
     public Billetera buscarPorId(Integer id) {
 
-        return repo.findByBilleteraId(id);
+        return billeteraRepository.findByBilleteraId(id);
     }
-    /*
-     * 2. Metodo: enviar plata 2.1-- recibir un importe, la moneda en la que va a
-     * estar ese importe recibir una billetera de origen y otra de destino 2.3--
-     * generar dos transacciones
-     */
 
     public void enviarSaldo(BigDecimal importe, String moneda, Integer billeteraOrigenId, Integer billeteraDestinoId,
-            String conceptoOperacion, String detalle) {
+            String concepto, String detalle) {
+
+        /**
+         * Metodo enviarSaldo buscar billetera por id se identifica cuenta por moneda
+         * determinar importe a transferir billetera de origen y billetera destino
+         * actualizar los saldos de las cuentas (resta en la origen y suma en la
+         * destino) generar 2 transacciones
+         * 
+         * ver delegaciones sobre entidades
+         * 
+         */
 
         Billetera billeteraSaliente = this.buscarPorId(billeteraOrigenId);
         Billetera billeteraEntrante = this.buscarPorId(billeteraDestinoId);
@@ -79,20 +104,28 @@ public class BilleteraService {
         Cuenta cuentaEntrante = billeteraEntrante.getCuenta(moneda);
 
         Transaccion tSaliente = new Transaccion();
-        tSaliente = cuentaSaliente.generarTransaccion(conceptoOperacion, detalle, importe, 1);
+        Transaccion tEntrante = new Transaccion();
+
+        tSaliente = cuentaSaliente.generarTransaccion(concepto, detalle, importe, 1);
         tSaliente.setaCuentaId(cuentaEntrante.getCuentaId());
         tSaliente.setaUsuarioId(billeteraEntrante.getPersona().getUsuario().getUsuarioId());
 
-        Transaccion tEntrante = new Transaccion();
-        tEntrante = cuentaEntrante.generarTransaccion(conceptoOperacion, detalle, importe, 0);
+        tEntrante = cuentaEntrante.generarTransaccion(concepto, detalle, importe, 0);
         tEntrante.setDeCuentaId(cuentaSaliente.getCuentaId());
         tEntrante.setDeUsuarioId(billeteraSaliente.getPersona().getUsuario().getUsuarioId());
 
         cuentaSaliente.agregarTransaccion(tSaliente);
         cuentaEntrante.agregarTransaccion(tEntrante);
 
-        // 2.2--* actualizar los saldos de las cuentas (a una se le suma y a la otra se
-        // le resta)
-        // tratar de encapsular y luego agregar la transaccion.
     }
+
+    public void enviarSaldo(BigDecimal importe, String moneda, Integer billeteraOrigenId, String email, String concepto,
+            String detalle) {
+
+        Usuario usuarioDestino = usuarioService.buscarPorEmail(email);
+        this.enviarSaldo(importe, moneda, billeteraOrigenId,
+                usuarioDestino.getPersona().getBilletera().getBilleteraId(), concepto, detalle);
+
+    }
+
 }

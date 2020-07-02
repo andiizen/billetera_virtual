@@ -44,7 +44,8 @@ public class Billetera {
         this.cuentas = cuentas;
     }
 
-    public void agregarCuenta(Cuenta cuenta) {
+    // se crea este metodo para hacer la relacion bidireccional y agregar la cuenta a la billetera
+    public void agregarCuenta(Cuenta cuenta){
         this.cuentas.add(cuenta);
         cuenta.setBilletera(this);
     }

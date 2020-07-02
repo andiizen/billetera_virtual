@@ -8,22 +8,20 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import ar.com.ada.api.billeteravirtual.entities.*;
-import ar.com.ada.api.billeteravirtual.repos.UsuarioRepository;
+import ar.com.ada.api.billeteravirtual.repositories.*;
 import ar.com.ada.api.billeteravirtual.security.Crypto;
 
 @Service
 public class UsuarioService {
-
     @Autowired
-    UsuarioRepository repo;
-
+    UsuarioRepository usuarioRepository;
     @Autowired
     PersonaService personaService;
     @Autowired
     BilleteraService billeteraService;
 
     public Usuario buscarPorUsername(String username) {
-        return null;
+      return usuarioRepository.findByUsername(username);
     }
 
     public void login(String username, String password) {
@@ -97,7 +95,12 @@ public class UsuarioService {
         return usuario;
 
     }
+       public Usuario buscarPorEmail(String email){
+      
+      return usuarioRepository.findByEmail(email);
+  }
 
+    
     /*
      * 2. Metodo: Iniciar Sesion 2.1-- recibe el username y la password 2.2-- vamos
      * a validar los datos 2.3-- devolver un verdadero o falso

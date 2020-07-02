@@ -1,36 +1,30 @@
     package ar.com.ada.api.billeteravirtual.entities;
 
-    import java.util.Date;
-    
-    import javax.persistence.*;
-    
-    @Entity
-    @Table(name = "usuario")
-    public class Usuario {
-    
-        @Id
-        @Column(name = "usuario_id")
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Integer usuarioId;
-    
-        private String username;
-    
-        private String password;
-    
-        private String email;
-    
-        @Column(name = "fecha_login")
-        private Date fechaLogin;
-    
-        @OneToOne
-        @JoinColumn(name = "persona_id", referencedColumnName = "persona_id")
-        private Persona persona;
+import java.util.*;
 
-    public Integer getUsuarioId() {
+import javax.persistence.*;
+@Entity
+@Table(name = "usuario")
+public class Usuario {
+
+    @Id
+    @Column(name = "usuario_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int usuarioId;
+    private String username;
+    private String password;
+    private String email;
+    @Column(name = "fecha_login")
+    private Date fechaLogin;
+    @OneToOne
+    @JoinColumn(name = "persona_id", referencedColumnName = "persona_id")
+    private Persona persona;
+
+    public int getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(Integer usuarioId) {
+    public void setUsuarioId(int usuarioId) {
         this.usuarioId = usuarioId;
     }
 
