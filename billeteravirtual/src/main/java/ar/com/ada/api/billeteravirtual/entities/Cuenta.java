@@ -5,23 +5,27 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import ar.com.ada.api.billeteravirtual.entities.Transaccion.TipoTransaccionEnum;
+
 @Entity
 @Table(name = "cuenta")
 public class Cuenta {
 
-	@Id
-	@Column(name = "cuenta_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer cuentaId;
-	private BigDecimal saldo;
-	private String moneda;
-
-	@ManyToOne
-	@JoinColumn(name = "billetera_id", referencedColumnName = "billetera_id")
-	private Billetera billetera;
-
-	@OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL)
-	private List<Transaccion> transacciones = new ArrayList<>();
+    @Id
+    @Column(name = "cuenta_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer cuentaId;
+    private BigDecimal saldo;
+    private String moneda;
+    @ManyToOne
+    @JoinColumn(name = "billetera_id", referencedColumnName = "billetera_id")
+    private Billetera billetera;
+    @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Transaccion> transacciones = new ArrayList<>();
 
 	public Integer getCuentaId() {
 		return cuentaId;
@@ -74,7 +78,7 @@ public class Cuenta {
         BigDecimal importe = transaccion.getImporte();
         BigDecimal saldoNuevo;
 
-		if (transaccion.getTipoOperacion().equals(1)) {
+        if (transaccion.getTipoOperacion() == TipoTransaccionEnum.ENTRANTE) {
 
 			saldoNuevo = saldoActual.add(importe);
 			
@@ -87,7 +91,7 @@ public class Cuenta {
     }
 
     public Transaccion generarTransaccion(String conceptoOperacion, String detalle, BigDecimal importe,
-            Integer tipoOp) {
+            TipoTransaccionEnum tipoOp) {
 
 		Transaccion transaccion = new Transaccion();
 
@@ -99,7 +103,7 @@ public class Cuenta {
         transaccion.setTipoOperacion(tipoOp);// 1 Entrada, 0 Salida
         transaccion.setEstadoId(2);// -1 Rechazada 0 Pendiente 2 Aprobada
 
-        if (transaccion.getTipoOperacion() == 1) { // Es de entrada
+        if (transaccion.getTipoOperacion() == TipoTransaccionEnum.ENTRANTE) { // Es de entrada
 
             transaccion.setaUsuarioId(billetera.getPersona().getUsuario().getUsuarioId());
             transaccion.setaCuentaId(this.getCuentaId());

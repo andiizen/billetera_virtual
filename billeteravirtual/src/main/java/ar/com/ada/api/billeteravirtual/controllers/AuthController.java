@@ -38,7 +38,8 @@ public class AuthController {
     @PostMapping("auth/register")
     public ResponseEntity<RegistrationResponse> postRegisterUser(@RequestBody RegistrationRequest req) {
         RegistrationResponse r = new RegistrationResponse();
-
+        // aca creamos la persona y el usuario a traves del service.
+        
         Usuario usuario = usuarioService.crearUsuario(req.fullName, req.country, req.identificationType, req.identification, req.birthDate, req.email, req.password);
         r.isOk = true;
         r.message = "Te registraste con exitoooo!!!!!!!";
