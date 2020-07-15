@@ -7,18 +7,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
-import ar.com.ada.api.billeteravirtual.entities.*;
-import ar.com.ada.api.billeteravirtual.repositories.*;
+import ar.com.ada.api.billeteravirtual.entities.Billetera;
+import ar.com.ada.api.billeteravirtual.entities.Cuenta;
+import ar.com.ada.api.billeteravirtual.entities.Persona;
+import ar.com.ada.api.billeteravirtual.entities.Usuario;
+import ar.com.ada.api.billeteravirtual.repositories.UsuarioRepository;
 import ar.com.ada.api.billeteravirtual.security.Crypto;
+import ar.com.ada.api.billeteravirtual.sistema.comm.EmailService;
 
 @Service
 public class UsuarioService {
-    @Autowired
-    UsuarioRepository usuarioRepository;
-    @Autowired
-    PersonaService personaService;
-    @Autowired
-    BilleteraService billeteraService;
+
+  @Autowired
+  PersonaService personaService;
+  @Autowired
+  BilleteraService billeteraService;
+  @Autowired
+  UsuarioRepository usuarioRepository;
+  @Autowired
+  EmailService emailService;
 
     public Usuario buscarPorUsername(String username) {
       return usuarioRepository.findByUsername(username);
@@ -89,8 +96,10 @@ public class UsuarioService {
 
         billeteraService.grabar(billetera);
 
-        billeteraService.cargarSaldo(new BigDecimal(500), "ARS", billetera.getBilleteraId(), "regalo",
-                "Bienvenida por creacion de billetera");
+    billeteraService.cargarSaldo(new BigDecimal(500), "ARS", billetera, "regalo", "Bienvenida por creacion de usuario");
+
+    emailService.SendEmail(usuario.getEmail(), "Bienvenido a La Billetera Virtual de ADA",
+        "Felicidades! Te regalamos 500 ARS como bienvenida a Billetera Virtual! :D Saludos");
 
         return usuario;
 
@@ -99,10 +108,15 @@ public class UsuarioService {
       
       return usuarioRepository.findByEmail(email);
   }
-    
-    /*
-     * 2. Metodo: Iniciar Sesion 2.1-- recibe el username y la password 2.2-- vamos
-     * a validar los datos 2.3-- devolver un verdadero o falso
-     */
+
+  public Usuario buscarPor(Integer id) {
+    Optional<Usuario> usuarioOp = usuarioRepository.findById(id);
+
+    if (usuarioOp.isPresent()) {
+      return usuarioOp.get();
+    }
+
+    return null;
+  }
 
 }
