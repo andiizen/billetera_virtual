@@ -3,7 +3,9 @@ package ar.com.ada.api.billeteravirtual.controllers;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import ar.com.ada.api.billeteravirtual.entities.Transaccion;
 import ar.com.ada.api.billeteravirtual.entities.Transaccion.ResultadoTransaccionEnum;
 import ar.com.ada.api.billeteravirtual.models.request.CargaRequest;
 import ar.com.ada.api.billeteravirtual.models.request.EnvioSaldoRequest;
+import ar.com.ada.api.billeteravirtual.models.response.GenericResponse;
 import ar.com.ada.api.billeteravirtual.models.response.MovimientosResponse;
 import ar.com.ada.api.billeteravirtual.models.response.SaldoResponse;
 import ar.com.ada.api.billeteravirtual.models.response.TransaccionResponse;
@@ -161,6 +164,24 @@ public class BilleteraController {
             res.add(movimiento);
         }
         return ResponseEntity.ok(res);
+    }
+    @DeleteMapping("/billeteras/{id}")
+    public ResponseEntity<?> borrarBilletera(@PathVariable int id){
+
+        Billetera billetera = billeteraService.buscarPorId(id);
+
+        if(billetera != null){
+
+            billeteraService.borrarBilletera(billetera);
+
+            GenericResponse resp = new GenericResponse();
+            resp.isOk = true;
+            resp.id = billetera.getBilleteraId();
+            resp.message = "Fue eliminada con exito";
+
+       return ResponseEntity.ok(resp); 
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 

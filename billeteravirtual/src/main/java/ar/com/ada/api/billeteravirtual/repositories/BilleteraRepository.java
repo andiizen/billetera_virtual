@@ -10,5 +10,6 @@ public interface BilleteraRepository extends JpaRepository<Billetera, Integer> {
     
     
     Billetera findByBilleteraId(Integer id);
+    
 
 }

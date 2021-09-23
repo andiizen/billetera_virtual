@@ -72,7 +72,8 @@ public class BilleteraService {
 
         this.grabar(billetera);
 
-        emailService.SendEmail(billetera.getPersona().getUsuario().getEmail(), "Carga Saldo", "Tu carga fue exitosa. Saldo: " + saldo);
+        emailService.SendEmail(billetera.getPersona().getUsuario().getEmail(), "Carga Saldo",
+                "Tu carga fue exitosa. Saldo: " + saldo);
 
     }
 
@@ -151,9 +152,11 @@ public class BilleteraService {
         this.grabar(billeteraSaliente);
         this.grabar(billeteraEntrante);
 
-        emailService.SendEmail(billeteraEntrante.getPersona().getUsuario().getEmail(), "Transferencia", "Recibio " + importe + " de el usuario " + billeteraSaliente.getPersona().getUsuario().getEmail());
-        emailService.SendEmail(billeteraSaliente.getPersona().getUsuario().getEmail(), "Transferencia", "Se realizo la transferencia con exito a " + billeteraEntrante.getPersona().getUsuario().getEmail() + " y recibio " + importe);
-        
+        emailService.SendEmail(billeteraEntrante.getPersona().getUsuario().getEmail(), "Transferencia",
+                "Recibio " + importe + " de el usuario " + billeteraSaliente.getPersona().getUsuario().getEmail());
+        emailService.SendEmail(billeteraSaliente.getPersona().getUsuario().getEmail(), "Transferencia",
+                "Se realizo la transferencia con exito a " + billeteraEntrante.getPersona().getUsuario().getEmail()
+                        + " y recibio " + importe);
 
         return ResultadoTransaccionEnum.INICIADA;
 
@@ -197,6 +200,13 @@ public class BilleteraService {
             }
         }
         return movimientos;
+    }
+
+    public void borrarBilletera(Billetera billetera) {
+
+        
+        billeteraRepository.delete(billetera);
+
     }
 
 }
