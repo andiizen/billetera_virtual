@@ -202,10 +202,9 @@ public class BilleteraService {
         return movimientos;
     }
 
-    public void borrarBilletera(Billetera billetera) {
+    public void eliminarBilletera(Integer id) {
 
-        
-        billeteraRepository.delete(billetera);
+       billeteraRepository.deleteById(id);
 
     }
 

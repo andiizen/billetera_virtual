@@ -172,7 +172,7 @@ public class BilleteraController {
 
         if(billetera != null){
 
-            billeteraService.borrarBilletera(billetera);
+            billeteraService.eliminarBilletera(id);
 
             GenericResponse resp = new GenericResponse();
             resp.isOk = true;
