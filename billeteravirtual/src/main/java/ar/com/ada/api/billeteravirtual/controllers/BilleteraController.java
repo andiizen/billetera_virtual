@@ -166,7 +166,7 @@ public class BilleteraController {
         return ResponseEntity.ok(res);
     }
     @DeleteMapping("/billeteras/{id}")
-    public ResponseEntity<?> borrarBilletera(@PathVariable int id){
+    public ResponseEntity<?> borrarBilletera(@PathVariable Integer id){
 
         Billetera billetera = billeteraService.buscarPorId(id);
 
@@ -181,7 +181,7 @@ public class BilleteraController {
 
        return ResponseEntity.ok(resp); 
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
 
