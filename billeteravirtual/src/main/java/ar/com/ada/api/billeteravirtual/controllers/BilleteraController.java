@@ -186,6 +186,6 @@ public class BilleteraController {
 
        return ResponseEntity.ok(resp); 
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
