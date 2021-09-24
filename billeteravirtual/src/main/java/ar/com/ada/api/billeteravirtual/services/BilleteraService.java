@@ -204,7 +204,7 @@ public class BilleteraService {
 
     public void eliminarBilletera(Integer id) {
 
-       billeteraRepository.deleteById(id);
+        billeteraRepository.deleteById(id);
 
     }
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.ada.api.billeteravirtual.entities.Billetera;
 import ar.com.ada.api.billeteravirtual.entities.Cuenta;
+import ar.com.ada.api.billeteravirtual.entities.Persona;
 import ar.com.ada.api.billeteravirtual.entities.Transaccion;
 import ar.com.ada.api.billeteravirtual.entities.Transaccion.ResultadoTransaccionEnum;
 import ar.com.ada.api.billeteravirtual.models.request.CargaRequest;
@@ -23,6 +24,7 @@ import ar.com.ada.api.billeteravirtual.models.response.MovimientosResponse;
 import ar.com.ada.api.billeteravirtual.models.response.SaldoResponse;
 import ar.com.ada.api.billeteravirtual.models.response.TransaccionResponse;
 import ar.com.ada.api.billeteravirtual.services.BilleteraService;
+import ar.com.ada.api.billeteravirtual.services.PersonaService;
 import ar.com.ada.api.billeteravirtual.services.UsuarioService;
 
 @RestController
@@ -32,6 +34,8 @@ public class BilleteraController {
     BilleteraService billeteraService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    PersonaService pService;
 
     /*
      * webMetodo 1: consultar saldo: GET URL:/billeteras/{id}/saldos
@@ -165,25 +169,23 @@ public class BilleteraController {
         }
         return ResponseEntity.ok(res);
     }
+   
     @DeleteMapping("/billeteras/{id}")
-    public ResponseEntity<?> borrarBilletera(@PathVariable Integer id){
-
+    public ResponseEntity<?> eliminarBilletera(@PathVariable Integer id){
+        
         Billetera billetera = billeteraService.buscarPorId(id);
 
         if(billetera != null){
 
-            billeteraService.eliminarBilletera(id);
+            billeteraService.eliminarBilletera(id);            
 
             GenericResponse resp = new GenericResponse();
             resp.isOk = true;
             resp.id = billetera.getBilleteraId();
-            resp.message = "Fue eliminada con exito";
+            resp.message = "Fue eliminada con éxito";
 
        return ResponseEntity.ok(resp); 
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
-
 }

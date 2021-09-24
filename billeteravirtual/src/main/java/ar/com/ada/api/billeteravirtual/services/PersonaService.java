@@ -11,8 +11,8 @@ public class PersonaService {
     @Autowired
     PersonaRepository repo;
 
-    public void grabar(Persona persona){
+    public void grabar(Persona persona) {
         repo.save(persona);
     }
-    
+
 }
